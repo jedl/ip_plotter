@@ -3845,3 +3845,10 @@ Processing by PlotsController#index as HTML
   Parameters: {"ip_address"=>"175.2.3.2,8.8.8.8,75.72.237.04,4.4.4.4"}
   Rendered plots/index.html.erb within layouts/application (0.9ms)
 Completed 200 OK in 403ms (Views: 4.2ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/plots.html?ip_address=175.2.3.2,8.8.8.8,75.72.237.04,4.4.4.4" for ::1 at 2015-12-07 02:32:38 -0600
+Processing by PlotsController#index as HTML
+  Parameters: {"ip_address"=>"175.2.3.2,8.8.8.8,75.72.237.04,4.4.4.4"}
+  Rendered plots/index.html.erb within layouts/application (2.9ms)
+Completed 200 OK in 457ms (Views: 23.7ms)
