@@ -1,5 +1,7 @@
-PATH
-  remote: ../ip_locator
+GIT
+  remote: git://github.com/jedl/ip_locator.git
+  revision: 2c658ed5ae3d86040b7ad42f0fd759698617672a
+  branch: master
   specs:
     ip_locator (0.1.0)
       faraday

@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 gem 'rails', '4.2.5'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
-gem "ip_locator", :path => "../ip_locator"
+gem "ip_locator", github: 'jedl/ip_locator', branch: 'master'
 
 # # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.0'
