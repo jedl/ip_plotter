@@ -28,5 +28,6 @@ module IpPlotter
     # config.active_record.raise_in_transactional_callbacks = true
 
     config.assets.enabled = false
+    config.assets.precompile = []
   end
 end
