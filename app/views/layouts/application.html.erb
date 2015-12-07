@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IpPlotter</title>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <form onsubmit="submitIpAddresses();return false;">IP Address(es):  <input id="ip_address" type="text" style="width:240px;margin:0 8px 0 4px;"><input type="submit"></form>
+  <div id="googleMap" style="width:1000px;height:500px;margin-top:10px;"></div>
+
+  <script src="https://maps.googleapis.com/maps/api/js"></script>
+  <script>
+    var authenticity_token = "<%= form_authenticity_token %>";
+    var addresses = [];
+    var gm; // Google Map
+    <%= yield %>
+
+    function Map() {
+      var mapProp = {
+        center:new google.maps.LatLng(18.0,0.0),
+        zoom:2,
+        mapTypeId:google.maps.MapTypeId.ROADMAP
+      };
+    
+      this.map=new google.maps.Map(document.getElementById("googleMap"),mapProp);
+      this.markers = [], this.addresses = null;
+
+      this.positionMarkers = function(marker, location) {
+        if (typeof google === 'undefined') return;
+
+        if (location && location.latitude && location.longitude) {
+          var point = {lat: location.latitude, lng: location.longitude};
+          // this.map.setCenter(location);
+          marker.setPosition(point);
+          marker.setVisible(true);
+        }
+      };
+
+      this.plotPoints = function(addresses) {
+        var m;
+        this.reset();
+
+        for (var i = 0; i < addresses.length; i++) {
+          this.markers.push(
+                            new google.maps.Marker({
+                              map:this.map,
+                              draggable:false,
+                              animation: google.maps.Animation.DROP
+                            })
+          );
+
+          this.positionMarkers(this.markers[i], addresses[i]);
+        }
+      };
+
+      this.reset = function() {
+        for (var i = 0; i < this.markers.length; i++) {
+          this.markers[i].setMap(null);
+          delete this.markers[i];
+        }
+
+        this.markers = [];
+      };
+
+      if (addresses.length) { this.plotPoints(addresses); } // This is only here to help speed up development (http://localhost:3000/plots.html?ip_address=175.2.3.2,8.8.8.8,75.72.237.04,4.4.4.4)
+      return this;
+    };
+
+    google.maps.event.addDomListener(window, 'load', gm = new Map());
+
+    function submitIpAddresses() {
+      xhr = new XMLHttpRequest();
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          var response = JSON.parse(xhr.responseText);
+
+          if (response.success) {
+            addresses = response.addresses;
+            gm.plotPoints(addresses);
+          }
+          else {
+            alert('Error: ' + response.errors.msg);
+          }
+        }
+      };
+      xhr.open("post", "/plots.json", true);
+
+      var formData = new FormData();
+      formData.append("ip_address", document.getElementById('ip_address').value);
+      formData.append("authenticity_token", authenticity_token);
+      xhr.send(formData);
+    };
+  </script>
+</body>
+</html>
